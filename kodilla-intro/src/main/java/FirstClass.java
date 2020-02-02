@@ -9,7 +9,7 @@ public class FirstClass {
         Notebook heavyNotebook = new Notebook(2000 , 1500 , 2019);
         System.out.println(heavyNotebook.weight + "g " + heavyNotebook.price);
         heavyNotebook.checkPrice();
-        heavyNotebook.checkWeight();
+        heavyNotebook.checkPrice();
         heavyNotebook.checkYear();
 
         Notebook oldNotebook = new Notebook(1600 , 600 , 2010);
@@ -18,5 +18,13 @@ public class FirstClass {
         oldNotebook.checkWeight();
         oldNotebook.checkYear();
 
+        int[] numbers =new int[]{12,3,45,7};
+        Loops object=new Loops();
+        object.sumNumbers(numbers);
+//        System.out.println(object);
+
+        int[] numbers2 =new int[]{12,4};
+        User user = new User("Ania", 34);
+        System.out.println("Suma: " + user.tableNumbersSum(numbers2));
     }
 }
