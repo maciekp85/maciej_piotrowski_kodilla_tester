@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.2.1.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.2.4.RELEASE")
     }
 }
 
@@ -13,11 +13,6 @@ apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
-bootJar {
-    baseName = 'kodilla-soap'
-    version =  '1.0.0'
-}
-
 repositories {
     mavenCentral()
 }
@@ -25,6 +20,58 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+
+configurations {
+    jaxb
+}
+
+task genJaxb {
+    ext.sourcesDir = "${buildDir}/generated-sources/jaxb"
+    ext.classesDir = "${buildDir}/classes/jaxb"
+    ext.schema = "src/main/resources/kodilla.xsd"
+
+    outputs.dir classesDir
+
+    doLast() {
+        project.ant {
+            taskdef name: "xjc", classname: "com.sun.tools.xjc.XJCTask",
+                    classpath: configurations.jaxb.asPath
+            mkdir(dir: sourcesDir)
+            mkdir(dir: classesDir)
+
+            xjc(destdir: sourcesDir, schema: schema) {
+                arg(value: "-wsdl")
+                produces(dir: sourcesDir, includes: "**/*.java")
+            }
+
+            javac(destdir: classesDir, source: 1.8, target: 1.8, debug: true,
+                    debugLevel: "lines,vars,source",
+                    classpath: configurations.jaxb.asPath) {
+                src(path: sourcesDir)
+                include(name: "**/*.java")
+                include(name: "*.java")
+            }
+
+            copy(todir: classesDir) {
+                fileset(dir: sourcesDir, erroronmissingdir: false) {
+                    exclude(name: "**/*.java")
+                }
+            }
+        }
+    }
+}
+
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-web-services")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+    compile("wsdl4j:wsdl4j:1.6.1")
+    jaxb("org.glassfish.jaxb:jaxb-xjc:2.2.11")
+    compile(files(genJaxb.classesDir).builtBy(genJaxb))
+    compile('javax.xml.bind:jaxb-api:2.3.0')
+    compile('javax.activation:activation:1.1')
+    compile('org.glassfish.jaxb:jaxb-runtime:2.3.0')
+}
+
+bootJar {
+    from genJaxb.classesDir
 }
