@@ -3,4 +3,5 @@ include 'kodilla-intro'
 include 'kodilla-spring-basic'
 include 'kodilla-rest-api'
 include 'kodilla-soap'
+include 'kodilla-selenium'
 
