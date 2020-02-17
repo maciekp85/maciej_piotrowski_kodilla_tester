@@ -12,7 +12,7 @@ public class FacebookTestApp {
         WebDriver driver = new ChromeDriver();
         driver.get("https://www.facebook.com/");
 
-        WebElement yearCombo = driver.findElement(By.xpath("//select[3]"));
+        WebElement yearCombo = driver.findElement(By.xpath("//*[@id=\"birthday_wrapper\"]/div/span/span/select[3]"));
         Select yearSelect = new Select(yearCombo);
         yearSelect.selectByIndex(5);
     }
