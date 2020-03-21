@@ -5,4 +5,5 @@ include 'kodilla-rest-api'
 include 'kodilla-soap'
 include 'kodilla-selenium'
 include 'kodilla-cucumber'
+include 'kodilla-code-coverage'
 
